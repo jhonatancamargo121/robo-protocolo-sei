@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+node_modules/
+__pycache__/
+dist/
+build/
+*.xlsx
+*.csv
+*.pdf
+perfil_navegador/
+*.bak*
+outlook_session.json
+config.json
+saida/

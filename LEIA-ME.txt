@@ -1,0 +1,58 @@
+ROBÔ DE PROTOCOLO SEI - TROCA DE TITULARIDADE (CIDADE EXEMPLO)
+=============================================================
+
+>>> JEITO MAIS FÁCIL: dê dois cliques em "ABRIR PAINEL.bat" (nesta pasta).
+    Abre o PAINEL no navegador (http://127.0.0.1:8780), onde você:
+      - escolhe a ETAPA (1ª a 7ª, lidas da exportação do Smartsheet)
+      - gera/atualiza a fila da etapa (as outras etapas não são apagadas)
+      - abre o navegador do robô, prepara, abre a conferência e protocola com botões
+      - acompanha tudo no quadro "Andamento"
+    Deixe a janela preta do painel aberta enquanto usa.
+    A conferência mostra TODAS as páginas do DOC (o RG pode estar no fim do arquivo).
+
+Pasta: Desktop\robo-protocolo-sei\robo
+Abra um terminal (PowerShell) nesta pasta para rodar os comandos.
+
+PLANILHA DE CONTROLE: CONTROLE PROTOCOLOS.xlsx
+  - Coluna amarela "NOVO PROTOCOLO SEI" = número para copiar no Smartsheet
+    (substitui o número antigo, na linha indicada em "LINHA SMARTSHEET").
+  - Coluna "STATUS ROBÔ":
+      PENDENTE     ainda não preparado
+      PREPARADO    documentos baixados, falta conferir o RG/CPF
+      VERIFICAR    algo diferente (nome, titular, quadra/lote) - ver OBSERVAÇÃO
+      SEM ANEXO    não tem contrato/DOC no Loteamento
+      CONFERIDO    RG/CPF conferido, pronto para protocolar
+      PROTOCOLADO  feito - número na coluna amarela
+      PULAR        não protocolar (ex.: já feito à mão)
+      ERRO         deu problema - ver OBSERVAÇÃO
+  - Para o robô NÃO mexer num cliente, escreva PULAR no STATUS ROBÔ.
+  - Feche a planilha no Excel enquanto o robô roda (ele avisa se estiver aberta).
+
+PASSO A PASSO
+-------------
+0) Abrir o navegador do robô e fazer login no Loteamento e no SEI:
+       python abrir_navegador.py
+
+1) Preparar (só LÊ os sistemas: baixa contrato + DOC e confere o SIG):
+       python preparar.py 10        (10 clientes)   ou   python preparar.py   (todos)
+
+2) Conferir RG/CPF (abre uma página no navegador):
+       python conferencia.py
+   Clique nas páginas que são RG/CPF (a 1 já vem marcada) e "Confirmar".
+   Teclas 1-4 marcam páginas, Enter confirma. Feche com Ctrl+C no terminal.
+
+3) Protocolar (semiautomático):
+       python protocolar.py          (sempre 1 cliente por vez)
+       python protocolar.py --apresentacao   (devagar, para gravar/demonstrar)
+   O robô preenche tudo, anexa os 3 documentos e abre a tela de assinatura.
+   VOCÊ confere, digita a senha e clica em ASSINAR. O robô grava o número.
+   Se algo estiver errado, clique em FECHAR: o robô marca ERRO e para.
+
+Documentos: Desktop\PROTOCOLOS SEI CIDADE EXEMPLO\
+   DECISAO JUDICIAL\Decisão.pdf  (a mesma para todos)
+   NOME - QDxx LTxx\
+   CONTRATO.pdf, DOC_ORIGINAL.pdf, RG E CPF.pdf (gerado na conferência)
+
+Dados fixos da empresa, textos e tipos de documento: config.py
+Instalação (uma vez): pip install playwright pymupdf pandas openpyxl
+                      python -m playwright install chromium
